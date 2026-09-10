@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>razambek — Python-разработчик</title>
+<meta name="description" content="razambek — начинающий Python-разработчик. Телеграм-боты, сайты, автоматизация. Небольшие заказы от 5000 ₽.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1b1033;
+    --bg-panel: #241542;
+    --bg-panel-2: #2c1b52;
+    --gold: #ffc94d;
+    --coral: #ff6b5b;
+    --text: #f5f1ff;
+    --text-muted: #b3a8d6;
+    --border: rgba(245,241,255,0.12);
+    --radius-terminal: 14px;
+    --radius-soft: 10px;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 85% -10%, rgba(255,201,77,0.14), transparent 45%),
+      radial-gradient(circle at -10% 60%, rgba(255,107,91,0.10), transparent 40%);
+    color: var(--text);
+    font-family: 'Sora', system-ui, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a{ color: inherit; }
+
+  .wrap{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 0;
+  }
+  .brand{
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+  }
+  .brand span{ color: var(--gold); }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    background: var(--coral);
+    color: #1b1033;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration:none;
+    border: none;
+    cursor:pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .btn:hover{ background: #ff8172; transform: translateY(-1px); }
+  .btn:focus-visible{ outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  .btn-ghost{
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-ghost:hover{ background: rgba(255,255,255,0.06); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    display:grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 56px;
+    align-items:center;
+    padding: 48px 0 88px;
+  }
+  .eyebrow{
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0 0 18px;
+  }
+  .eyebrow b{ color: var(--gold); font-weight: 600; }
+
+  h1{
+    font-size: clamp(2.1rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 20px;
+    letter-spacing: -0.01em;
+  }
+
+  .hero p.lead{
+    color: var(--text-muted);
+    font-size: 1.08rem;
+    max-width: 46ch;
+    margin: 0 0 32px;
+  }
+
+  .hero-actions{ display:flex; gap: 14px; flex-wrap: wrap; }
+
+  /* ---------- terminal ---------- */
+  .terminal{
+    background: #140b28;
+    border-radius: var(--radius-terminal);
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 60px -25px rgba(0,0,0,0.6);
+    overflow:hidden;
+  }
+  .terminal-bar{
+    display:flex;
+    gap:7px;
+    padding: 14px 16px;
+    background: #1c1136;
+    border-bottom: 1px solid var(--border);
+  }
+  .dot{ width:11px; height:11px; border-radius:50%; }
+  .dot.r{ background:#ff5f56; }
+  .dot.y{ background:#ffbd2e; }
+  .dot.g{ background:#27c93f; }
+
+  .terminal-body{
+    padding: 22px 22px 26px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.92rem;
+    min-height: 190px;
+  }
+  .terminal-body .line{ white-space: pre-wrap; }
+  .prompt{ color: var(--gold); }
+  .out{ color: #b7f5c0; }
+  .cursor{
+    display:inline-block;
+    width: 8px;
+    height: 1em;
+    background: var(--text);
+    vertical-align: text-bottom;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* ---------- sections ---------- */
+  section{ padding: 64px 0; border-top: 1px solid var(--border); }
+
+  h2{
+    font-size: clamp(1.5rem, 2.6vw, 1.9rem);
+    font-weight: 700;
+    margin: 0 0 18px;
+  }
+
+  .about p{
+    color: var(--text-muted);
+    max-width: 62ch;
+    font-size: 1.05rem;
+  }
+
+  /* skills */
+  .skills-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .skill-card{
+    border-radius: var(--radius-soft);
+    padding: 26px 24px;
+    border: 1px solid var(--border);
+  }
+  .skill-card.bot{
+    background: linear-gradient(160deg, rgba(255,201,77,0.10), transparent 60%), var(--bg-panel);
+  }
+  .skill-card.web{
+    background: linear-gradient(160deg, rgba(255,107,91,0.10), transparent 60%), var(--bg-panel);
+  }
+  .skill-card h3{ margin: 0 0 10px; font-size: 1.15rem; }
+  .skill-card p{ color: var(--text-muted); margin: 0 0 16px; font-size: 0.98rem; }
+  .skill-snippet{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: #cbb8ff;
+    background: rgba(0,0,0,0.25);
+    border-radius: 6px;
+    padding: 10px 12px;
+    overflow-x: auto;
+  }
+
+  /* process */
+  .steps{
+    counter-reset: step;
+    display:grid;
+    gap: 18px;
+    margin-top: 32px;
+  }
+  .step{
+    display:grid;
+    grid-template-columns: 44px 1fr;
+    gap: 18px;
+    align-items:start;
+  }
+  .step-num{
+    counter-increment: step;
+    width: 40px; height:40px;
+    border-radius: 50%;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--gold);
+  }
+  .step-num::before{ content: counter(step); }
+  .step h3{ margin: 4px 0 4px; font-size: 1.05rem; }
+  .step p{ margin:0; color: var(--text-muted); font-size: 0.98rem; }
+
+  /* price */
+  .price-box{
+    margin-top: 28px;
+    padding: 30px 28px;
+    border-radius: var(--radius-soft);
+    border: 1px solid var(--border);
+    background: var(--bg-panel);
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .price-num{ font-size: 2.1rem; font-weight: 800; color: var(--gold); }
+  .price-note{ color: var(--text-muted); max-width: 40ch; font-size: 0.95rem; }
+
+  /* contact */
+  .contact{
+    text-align:center;
+    padding-bottom: 90px;
+  }
+  .contact h2{ margin-bottom: 12px; }
+  .contact p{ color: var(--text-muted); margin: 0 0 28px; }
+
+  footer{
+    border-top: 1px solid var(--border);
+    padding: 26px 0;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 820px){
+    .hero{ grid-template-columns: 1fr; padding-top: 24px; }
+    .skills-grid{ grid-template-columns: 1fr; }
+    .price-box{ flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .cursor{ animation: none; }
+    html{ scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">razam<span>bek</span></div>
+    <a class="btn btn-ghost" href="https://wa.me/79680098899" target="_blank" rel="noopener">Написать в WhatsApp</a>
+  </div>
+
+  <section class="hero" style="border:none; padding-top:0;">
+    <div>
+      <p class="eyebrow">razambek · <b>Python-разработчик</b></p>
+      <h1>Пишу телеграм-ботов и сайты, которые просто работают</h1>
+      <p class="lead">Начинающий Python-разработчик. Беру небольшие заказы — от простого скрипта до бота под конкретную задачу. Отвечаю быстро и довожу работу до результата.</p>
+      <div class="hero-actions">
+        <a class="btn" href="https://wa.me/79680098899" target="_blank" rel="noopener">Обсудить задачу</a>
+        <a class="btn btn-ghost" href="#skills">Что я делаю</a>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      </div>
+      <div class="terminal-body" id="terminalBody"></div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <h2>Обо мне</h2>
+    <p>Меня зовут razambek. Я изучаю Python и постепенно перехожу от учебных задач к реальным — от людей, которым нужно что-то небольшое, но рабочее: бот, скрипт или простой сайт. Объясняю простыми словами и не пропадаю после оплаты.</p>
+  </section>
+
+  <section class="skills" id="skills">
+    <h2>Что я делаю</h2>
+    <div class="skills-grid">
+      <div class="skill-card bot">
+        <h3>Телеграм-боты</h3>
+        <p>Бот, который принимает заявки, отвечает клиентам по сценарию или присылает уведомления. Настрою и запущу под вашу задачу.</p>
+        <div class="skill-snippet">@bot.message_handler()<br>def reply(msg):<br>&nbsp;&nbsp;bot.send_message(msg.chat.id, "Готово")</div>
+      </div>
+      <div class="skill-card web">
+        <h3>Сайты и скрипты</h3>
+        <p>Простой сайт-визитка, страница под проект или скрипт, который автоматизирует рутинную задачу и экономит время.</p>
+        <div class="skill-snippet">def automate(task):<br>&nbsp;&nbsp;while task.pending:<br>&nbsp;&nbsp;&nbsp;&nbsp;task.run()</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="process">
+    <h2>Как мы работаем</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num"></div>
+        <div>
+          <h3>Пишете в WhatsApp</h3>
+          <p>Коротко описываете, что нужно — даже своими словами, без технических терминов.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div>
+          <h3>Обсуждаем детали</h3>
+          <p>Уточняю задачу, называю цену и срок до начала работы — без сюрпризов потом.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div>
+          <h3>Показываю результат</h3>
+          <p>Присылаю готовую работу, вношу правки при необходимости.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing">
+    <h2>Цена</h2>
+    <div class="price-box">
+      <div>
+        <div class="price-num">от 5000 ₽</div>
+      </div>
+      <p class="price-note">Точная стоимость зависит от объёма задачи. Назову цену сразу после того, как разберусь в деталях.</p>
+    </div>
+  </section>
+
+  <section class="contact">
+    <h2>Готовы обсудить задачу?</h2>
+    <p>Напишите в WhatsApp — отвечаю обычно в течение дня.</p>
+    <a class="btn" href="https://wa.me/79680098899" target="_blank" rel="noopener">Написать в WhatsApp</a>
+  </section>
+
+  <footer>
+    <span>razambek</span>
+    <span>Python-разработчик · 2026</span>
+  </footer>
+</div>
+
+<script>
+  const lines = [
+    { text: '>>> import razambek', cls: 'prompt', pause: 500 },
+    { text: '>>> razambek.greet()', cls: 'prompt', pause: 500 },
+    { text: '"Привет! Я делаю телеграм-ботов и сайты на Python."', cls: 'out', pause: 0 }
+  ];
+
+  const body = document.getElementById('terminalBody');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function renderStatic(){
+    body.innerHTML = lines.map(l => `<div class="line ${l.cls}">${l.text}</div>`).join('');
+  }
+
+  async function typeLines(){
+    for (const l of lines){
+      const div = document.createElement('div');
+      div.className = 'line ' + l.cls;
+      body.appendChild(div);
+      for (let i = 0; i <= l.text.length; i++){
+        div.textContent = l.text.slice(0, i);
+        await new Promise(r => setTimeout(r, 18));
+      }
+      await new Promise(r => setTimeout(r, l.pause));
+    }
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    body.lastElementChild.appendChild(cursor);
+  }
+
+  if (reduceMotion){
+    renderStatic();
+  } else {
+    typeLines();
+  }
+</script>
+
+</body>
+</html>
